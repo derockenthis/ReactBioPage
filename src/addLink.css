@@ -1,0 +1,32 @@
+.addLinkbox{
+    font-size: 30px;
+    color:white;
+    margin:10px auto;
+    max-width:30vh;
+    height:5.5vh;
+    background-color:rgba(62, 62, 62, 0.489);
+    transition-duration: .4s;
+    overflow: hidden;
+}
+.addLinkbox:hover{
+    font-size: 30px;
+    color:white;
+    margin:10px auto;
+    max-width:30vh;
+    height:5.5vh;
+    background-color:rgba(62, 62, 62, 0.898)
+}
+.linkInfo{
+    display:flex;
+    flex-direction: column;
+}
+.linkInfo input{
+    border: none;
+}
+.linkInfo input:focus{
+    border:none;
+}
+.linkTitle{
+    font-weight: bold;
+    font-size:20px;
+}

@@ -1,0 +1,24 @@
+*, html{
+    margin: 0;
+    padding: 0;
+    
+}
+a{
+    text-decoration: none;
+}
+body{
+    background-color: #E0E0CE;
+    /* background-image: url(./img/retrofuture.jpg); */
+    font-family: 'Courier New', Courier, monospace;
+    /* color:white; */
+    padding:0;
+    
+}
+
+.App{
+    overflow: auto;
+    margin:0 auto;
+    max-width:700px;
+    height:100vh;
+    background-color: #ebebdc;
+}
