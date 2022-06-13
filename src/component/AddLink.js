@@ -5,15 +5,20 @@ import '../addLink.css'
 export default function AddLink() {
   // const [urlLink, seturlLink] = useState([]);
   // const [linkTitle, setlinkTitle] = useState([]);
-  var linkurl;
+  var linkUrl;
   var linkTitle;
-  const addLink = () =>{
-    linkTitle = document.getElementsByClassName("linkTitle").value
-    axios.post("http://127.0.0.1:3001/").then(() => {
-      console.log(linkTitle,"hello");
-    })
+  function getName(){
+    linkTitle = document.getElementById("l1").value
+    linkUrl = document.getElementById("lurl").value
+    console.log(linkTitle,linkUrl)
   }
-  return (
+  const addLink = () =>{
+    getName()
+    axios.post("http://127.0.0.1:3001/manage",{linkName:linkTitle, urlLink:linkUrl}).then(() => {
+    }).catch(err=>
+    console.log(err))
+  }
+  return ( 
     <div className = "linkAdd">
       <div className = "addLinkbox" data-toggle="modal" data-target="#exampleModalCenter">
       +
@@ -31,8 +36,8 @@ export default function AddLink() {
             </div>
             <div class="modal-body">
               <div class = "linkInfo">
-                <input placeholder = "Link Box Title" className = "linkTitle"></input>
-                <input placeholder = "Link Url" className = "linkUrl"></input>
+                <input placeholder = "Link Box Title" className = "linkTitle" id = "l1"></input>
+                <input placeholder = "Link Url" className = "linkUrl" id = 'lurl'></input>
               </div>
             </div>
             <div class="modal-footer">

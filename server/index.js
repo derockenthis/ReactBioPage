@@ -6,9 +6,30 @@ const cors = require("cors")
 app.use(cors())
 app.use(express.json())
 
+app.get('/pageLinks', async (req, res) => {
+   let sql = `SELECT urlLink,urlText,urlNum
+   FROM links
+   WHERE userName = ?`;
+   let rows = await executeSQL(sql, ['Derockenthis']);
+   console.log(rows)
+   res.send({rows})
+   return "HELLO"
+});
+app.post('/manage', async (req, res) => {
+   linkName = req.body.linkName;
+   urlLink = req.body.urlLink;
 
-app.post('/', async (req, res) => {
-   console.log("hello");
+   let sql = `INSERT INTO links
+   (urlNum, urlLink, urlText,userName,userID)
+   VALUES
+   (?, ?, ?, ?,?)`;
+
+   let params = [1, urlLink, linkName,'Derockenthis',1];
+   let rows = await executeSQL(sql, params); 
+
+   console.log(linkName,urlLink);
+   res.send("HELLOinRES")
+   return "HELLO"
 });
 async function executeSQL(sql, params){
     return new Promise (function (resolve, reject) {
