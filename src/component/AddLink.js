@@ -2,19 +2,24 @@ import axios from 'axios'
 import React, {useEffect, useState} from 'react';
 import '../style.css'
 import '../addLink.css'
-export default function AddLink() {
-  // const [urlLink, seturlLink] = useState([]);
+import Linksection from './Linksection';
+export default function AddLink(props) {
+  const [urlLink, seturlLink] = useState([]);
   // const [linkTitle, setlinkTitle] = useState([]);
   var linkUrl;
   var linkTitle;
-  function getName(){
+
+  function getName(props){
     linkTitle = document.getElementById("l1").value
     linkUrl = document.getElementById("lurl").value
+    seturlLink({linkTitle:linkTitle,
+                linkUrl:linkUrl})
     console.log(linkTitle,linkUrl)
   }
   const addLink = () =>{
     getName()
     axios.post("http://127.0.0.1:3001/manage",{linkName:linkTitle, urlLink:linkUrl}).then(() => {
+      return props.addnewLinks(urlLink)
     }).catch(err=>
     console.log(err))
   }

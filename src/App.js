@@ -13,8 +13,9 @@ function App() {
     return (
         <div className="App">
             <div className = "linkBox">
-                <Linksection/>
-                <AddLink/>
+                <Linksection id = {links}/>
+
+                <AddLink addnewLinks = {setLinks}/>
             </div>
         </div>
     );

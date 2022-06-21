@@ -11,23 +11,36 @@ app.get('/pageLinks', async (req, res) => {
    FROM links
    WHERE userName = ?`;
    let rows = await executeSQL(sql, ['Derockenthis']);
-   console.log(rows)
+   getnumLinks('Derockenthis');
+   // console.log(rows)
    res.send({rows})
    return "HELLO"
 });
+async function getnumLinks(username){
+   let sql = `SELECT urlNum
+   FROM links
+   WHERE userName = ?`;
+   let rows = await executeSQL(sql, [username]);
+   console.log(rows.length)
+   return rows.length
+}
 app.post('/manage', async (req, res) => {
+   //recieve links from front
    linkName = req.body.linkName;
    urlLink = req.body.urlLink;
-
+   //query statement
    let sql = `INSERT INTO links
    (urlNum, urlLink, urlText,userName,userID)
    VALUES
    (?, ?, ?, ?,?)`;
-
-   let params = [1, urlLink, linkName,'Derockenthis',1];
+   //insert into databse
+   const num=await getnumLinks('Derockenthis')
+   console.log(num,"NUMBER")
+   let params = [num+1, urlLink, linkName,'Derockenthis',1];
    let rows = await executeSQL(sql, params); 
 
    console.log(linkName,urlLink);
+
    res.send("HELLOinRES")
    return "HELLO"
 });
