@@ -1,5 +1,5 @@
 import React from 'react'
-
+import '../linksection.css'
 export default function Link(link) {
     // console.log(link,"BIOZ")
   return (

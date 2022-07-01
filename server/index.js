@@ -1,27 +1,85 @@
 const express = require("express")
+
 const mysql = require('mysql');
 const app = express();
 const pool = dbConnection();
+
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+const {uploadFile} = require('./s3')
+
 const cors = require("cors")
 app.use(cors())
 app.use(express.json())
 
 app.get('/pageLinks', async (req, res) => {
-   let sql = `SELECT urlLink,urlText,urlNum
+   let sql = `SELECT urlLink,urlText,urlNum,urlid
    FROM links
-   WHERE userName = ?`;
+   WHERE userName = ?
+   ORDER BY urlNum ASC`;
    let rows = await executeSQL(sql, ['Derockenthis']);
-   getnumLinks('Derockenthis');
    // console.log(rows)
    res.send({rows})
    return "HELLO"
 });
+app.get('/getprofImage', async (req, res) => {
+   let sql = `SELECT profileImage
+   FROM profileimage
+   WHERE userName = ?`;
+   let rows = await executeSQL(sql, ['Derockenthis'])
+   await checkProf('Derockenthis')
+   res.send({rows})
+
+   return "worked"
+})
+app.post('/profImage', upload.single('image'), async (req, res) => {
+   const file = req.file
+   const result = await uploadFile(file)
+   const num = await checkProf('Derockenthis')
+   if(num){
+      console.log("EHEHEHEH",num)
+      let sql = `UPDATE profileimage
+            SET profileImage = ?
+            WHERE userName = ?`
+      let params = [result.Location,'Derockenthis'];
+      let rows = await executeSQL(sql, params); 
+   }
+   else{
+      let sql = `INSERT INTO profileimage
+      (userName,profileImage)
+      VALUES
+      (?, ?)`;
+      let params = ['Derockenthis',result.Location];
+      let rows = await executeSQL(sql, params); 
+   }
+   res.send("SUCCESS")
+   return "worked"
+})
+app.post('/resortedLinks', async (req, res) => {
+
+   links = req.body.links
+   for(let i = 0; i<links.length;i++){
+      let sql = `UPDATE links
+               SET urlNum = ?
+               WHERE urlid = ? and userName =?`
+      let rows = await executeSQL(sql,[links[i].urlNum,links[i].urlid,'Derockenthis'])
+
+   }
+})
+async function checkProf(username){
+   let sql = `SELECT profileImage
+   FROM profileimage
+   WHERE userName = ?`;
+   let rows = await executeSQL(sql, [username])
+   console.log(rows.length)
+   return rows.length
+}
 async function getnumLinks(username){
    let sql = `SELECT urlNum
    FROM links
    WHERE userName = ?`;
    let rows = await executeSQL(sql, [username]);
-   console.log(rows.length)
+
    return rows.length
 }
 app.post('/manage', async (req, res) => {
@@ -35,11 +93,10 @@ app.post('/manage', async (req, res) => {
    (?, ?, ?, ?,?)`;
    //insert into databse
    const num=await getnumLinks('Derockenthis')
-   console.log(num,"NUMBER")
-   let params = [num+1, urlLink, linkName,'Derockenthis',1];
+
+   let params = [num, urlLink, linkName,'Derockenthis',1];
    let rows = await executeSQL(sql, params); 
 
-   console.log(linkName,urlLink);
 
    res.send("HELLOinRES")
    return "HELLO"

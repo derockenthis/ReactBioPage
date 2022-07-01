@@ -1,0 +1,29 @@
+.Linksection{
+    background-color: transparent;
+    display:grid;
+    grid-template-columns: repeat(auto-fill);
+    justify-content: center;
+    padding: 1em;
+}
+.Link{
+    min-height:50px;
+    min-width: 300px;
+    border-radius:5px;
+    background-color:white;
+    overflow: hidden;
+}
+.Link:hover{
+    background-color:rgb(222, 222, 222);
+}
+.current{
+    color:green;
+    background-color:green;
+}
+.Link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.aLink:not(:last-of-type){
+    margin-bottom:.5rem
+}
