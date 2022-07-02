@@ -1,12 +1,16 @@
 const express = require("express")
 
+const fs = require('fs')
+const util= require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 const mysql = require('mysql');
 const app = express();
 const pool = dbConnection();
 
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
-const {uploadFile} = require('./s3')
+const {uploadFile,deleteFile} = require('./s3')
 
 const cors = require("cors")
 app.use(cors())
@@ -35,21 +39,23 @@ app.get('/getprofImage', async (req, res) => {
 app.post('/profImage', upload.single('image'), async (req, res) => {
    const file = req.file
    const result = await uploadFile(file)
-   const num = await checkProf('Derockenthis')
-   if(num){
-      console.log("EHEHEHEH",num)
+   await unlinkFile(file.path)
+   const check = await checkProf('Derockenthis')
+   if(check!=undefined){
+      console.log(check.Name,"HEHEH")
       let sql = `UPDATE profileimage
-            SET profileImage = ?
+            SET profileImage = ?,Name = ?
             WHERE userName = ?`
-      let params = [result.Location,'Derockenthis'];
+      let params = [result.Location,result.Key,'Derockenthis'];
       let rows = await executeSQL(sql, params); 
+      const removeFile = await deleteFile(check.Name)
    }
    else{
       let sql = `INSERT INTO profileimage
-      (userName,profileImage)
+      (userName,profileImage,Name)
       VALUES
-      (?, ?)`;
-      let params = ['Derockenthis',result.Location];
+      (?, ?,?)`;
+      let params = ['Derockenthis',result.Location,result.Key];
       let rows = await executeSQL(sql, params); 
    }
    res.send("SUCCESS")
@@ -67,12 +73,12 @@ app.post('/resortedLinks', async (req, res) => {
    }
 })
 async function checkProf(username){
-   let sql = `SELECT profileImage
+   let sql = `SELECT profileImage, Name
    FROM profileimage
    WHERE userName = ?`;
    let rows = await executeSQL(sql, [username])
-   console.log(rows.length)
-   return rows.length
+   console.log(rows[0])
+   return rows[0]
 }
 async function getnumLinks(username){
    let sql = `SELECT urlNum

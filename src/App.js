@@ -6,7 +6,7 @@ import './style.css';
 import ProfPic from './component/ProfPic';
 import AddLink from './component/AddLink';
 import Linksection from './component/Linksection'
-import Click from './component/Click';
+
 
 function App() {
 
@@ -15,7 +15,6 @@ function App() {
     return (
         <div className="App">
             <div className = "linkBox">
-                <Click/>
                 <ProfPic/>
                 <Linksection id = {links}/>
 
